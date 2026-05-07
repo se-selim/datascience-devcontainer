@@ -119,13 +119,15 @@ Now you have a fresh data science project with the dev container configuration r
 
 ### Using pip directly
 
+Install packages in the container terminal:
+
 ```bash
 pip install <package-name>
 ```
 
 > **Note:** Packages installed this way will be lost when the container is rebuilt.
 
-### Using requirements.txt (Recommended)
+### Using requirements.txt (recommended)
 
 1. **Create** a `requirements.txt` file in the repository root:
    ```
