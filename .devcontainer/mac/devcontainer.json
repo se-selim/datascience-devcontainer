@@ -9,7 +9,6 @@
 	"image": "gperdrizet/datascience-mac",
     "runArgs": [
 		"--platform", "linux/arm64",  // Run as ARM64 image (native on Apple Silicon)
-		"--publish", "8888:8888",     // Map JupyterLab port for easy access
 		"--network=bridge"            // Explicitly use bridge network for internet access
 	],
 	"remoteUser": "vscode",           // Use the 'vscode' user provided by the base image

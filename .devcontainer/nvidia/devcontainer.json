@@ -11,7 +11,6 @@
 		"--ipc=host",                 // Connect to host interprocess namespace
 		"--ulimit", "memlock=-1",     // Turn off memory lock limit
 		"--ulimit", "stack=67108864", // Increase process stack limit to 64 MB
-		"--publish", "8888:8888",     // Map JupyterLab port for easy access
 		"--network=bridge"            // Explicitly use bridge network for internet access
 	],
 	"remoteUser": "vscode",           // Use the 'vscode' user provided by the base image
