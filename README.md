@@ -119,6 +119,7 @@ git fetch upstream && git merge upstream/main
 | optuna | Hyperparameter optimization |
 | jupyterlab | Interactive notebooks |
 | cupy-cuda12x | GPU-accelerated arrays (NVIDIA only) |
+| python-dotenv | Environment variable management |
 
 ## GPU compatibility (NVIDIA)
 
