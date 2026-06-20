@@ -10,7 +10,95 @@
 [![Docker Pulls datascience-cpu](https://img.shields.io/docker/pulls/gperdrizet/datascience-cpu?label=datascience-cpu&logo=docker)](https://hub.docker.com/r/gperdrizet/datascience-cpu)
 [![Docker Pulls datascience-mac](https://img.shields.io/docker/pulls/gperdrizet/datascience-mac?label=datascience-mac&logo=docker)](https://hub.docker.com/r/gperdrizet/datascience-mac)
 
-A ready-to-use data science environment for VS Code, designed for intro Python and ML bootcamp students. Covers data visualization, data cleaning, feature engineering, and traditional machine learning. Available in three configurations: NVIDIA GPU, CPU-only, and Mac (Apple Silicon).
+A ready-to-use data science environment for VS Code, designed for intro Python and ML bootcamp students. Covers data visualization, data cleaning, feature engineering, and traditional machine learning.
+
+## Requirements
+
+**All users**
+- [Docker Desktop](https://docs.docker.com/desktop/) (Windows / Mac) or [Docker Engine](https://docs.docker.com/engine/install/) (Linux)
+- [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+**NVIDIA GPU users** (also required)
+- NVIDIA driver ≥570 — [download](https://www.nvidia.com/Download/index.aspx)
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) *(Linux only — not needed on Windows)*
+
+> **Mac users:** GPU acceleration (Metal/MPS) does not pass through to Docker containers. The Mac configuration uses native ARM64 CPU — no extra setup needed beyond Docker Desktop.
+
+## Quick start
+
+1. **Fork** this repository (click **Fork** at the top of this page)
+
+2. **Clone** your fork:
+   ```bash
+   git clone https://github.com/<your-username>/datascience-devcontainer.git
+   ```
+
+3. **Open the folder in VS Code**, then open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **Dev Containers: Open Folder in Container**
+
+   > VS Code will ask which configuration to use — pick the one that matches your machine (see table below).
+
+4. **Verify** your setup by running `notebooks/environment_test.ipynb`
+
+## Which configuration should I use?
+
+| If you have... | Choose this |
+|----------------|-------------|
+| NVIDIA GPU (GTX 10xx / RTX / Quadro / Tesla) | **DataScience NVIDIA** |
+| Windows or Linux machine, no NVIDIA GPU | **DataScience CPU** |
+| Apple Silicon Mac (M1 / M2 / M3 / M4) | **DataScience Mac** |
+
+Not sure if your GPU is compatible? Check: [NVIDIA CUDA GPUs](https://developer.nvidia.com/cuda-gpus) (need compute capability ≥6.0).
+
+## Using as a template for new projects
+
+Fork this repo once, then use it as a GitHub template to spin up new projects instantly.
+
+### One-time setup
+
+1. Go to your fork on GitHub
+2. Click **Settings** → scroll to **Template repository** → enable it
+
+### Creating a new project
+
+1. Go to your fork and click **Use this template** → **Create a new repository**
+2. Name your new repo and click **Create repository**
+3. Clone it and start working:
+   ```bash
+   git clone https://github.com/<your-username>/my-new-project.git
+   ```
+
+## Adding Python packages
+
+### Temporary (lost on rebuild)
+
+```bash
+pip install <package-name>
+```
+
+### Permanent (recommended)
+
+1. Create a `requirements.txt` in the repository root:
+   ```
+   lightgbm
+   shap
+   ```
+
+2. Add a `postCreateCommand` to the relevant `.devcontainer/*/devcontainer.json`:
+   ```json
+   "postCreateCommand": "pip install -r requirements.txt"
+   ```
+
+3. Rebuild the container (`Ctrl+Shift+P` → **Dev Containers: Rebuild Container**)
+
+## Keeping your fork updated
+
+```bash
+# Add upstream once
+git remote add upstream https://github.com/gperdrizet/datascience-devcontainer.git
+
+# Pull in updates
+git fetch upstream && git merge upstream/main
+```
 
 ## What's included
 
@@ -23,13 +111,19 @@ A ready-to-use data science environment for VS Code, designed for intro Python a
 | jupyterlab | Interactive notebooks |
 | cupy-cuda12x | GPU-accelerated arrays (NVIDIA only) |
 
-## Devcontainer configurations
+## GPU compatibility (NVIDIA)
 
-| Configuration | Image | Use when |
-|---------------|-------|---------|
-| **DataScience NVIDIA** | `gperdrizet/datascience-nvidia` | You have an NVIDIA GPU |
-| **DataScience CPU** | `gperdrizet/datascience-cpu` | CPU-only machine (any OS) |
-| **DataScience Mac** | `gperdrizet/datascience-mac` | Apple Silicon Mac (M1/M2/M3) |
+Requires compute capability ≥6.0 (Pascal / GTX 10xx or newer):
+
+| Architecture | Example GPUs | Compute Capability |
+|--------------|--------------|-------------------|
+| Pascal | GTX 1050–1080, Tesla P100 | 6.0–6.1 |
+| Volta | Tesla V100, Titan V | 7.0 |
+| Turing | RTX 2060–2080, GTX 1660 | 7.5 |
+| Ampere | RTX 3060–3090, A100 | 8.0–8.6 |
+| Ada Lovelace | RTX 4060–4090 | 8.9 |
+| Hopper | H100, H200 | 9.0 |
+| Blackwell | RTX 5070–5090, B100, B200 | 10.0 |
 
 ## Project structure
 
@@ -37,11 +131,11 @@ A ready-to-use data science environment for VS Code, designed for intro Python a
 datascience-devcontainer/
 ├── .devcontainer/
 │   ├── nvidia/
-│   │   └── devcontainer.json   # NVIDIA GPU dev container configuration
+│   │   └── devcontainer.json   # NVIDIA GPU configuration
 │   ├── cpu/
-│   │   └── devcontainer.json   # CPU dev container configuration
+│   │   └── devcontainer.json   # CPU configuration
 │   └── mac/
-│       └── devcontainer.json   # Mac (ARM64) dev container configuration
+│       └── devcontainer.json   # Mac (ARM64) configuration
 ├── data/                       # Store datasets here
 ├── notebooks/
 │   └── environment_test.ipynb  # Verify your setup
@@ -50,117 +144,12 @@ datascience-devcontainer/
 └── README.md
 ```
 
-## Requirements
-
-- **Docker** ([Windows](https://docs.docker.com/desktop/setup/install/windows-install) | [Linux](https://docs.docker.com/desktop/setup/install/linux))
-- **VS Code** with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-
-### NVIDIA configuration (additional requirements)
-
-- **NVIDIA GPU** (Pascal or newer) with driver ≥570
-- **NVIDIA Container Toolkit** (Linux): [install guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-
-### Mac configuration
-
-- **Docker Desktop for Mac** (Apple Silicon): [install guide](https://docs.docker.com/desktop/setup/install/mac-install/)
-
-> **Note:** GPU acceleration is not available inside Docker containers on Apple Silicon. Metal/MPS is a macOS-only framework with no Docker passthrough. The Mac configuration provides native ARM64 CPU performance.
-
-### GPU compatibility (NVIDIA)
-
-| Architecture | Example GPUs | Compute Capability |
-|--------------|--------------|-------------------|
-| Pascal | GTX 1050-1080, Tesla P100 | 6.0-6.1 |
-| Volta | Tesla V100, Titan V | 7.0 |
-| Turing | RTX 2060-2080, GTX 1660 | 7.5 |
-| Ampere | RTX 3060-3090, A100 | 8.0-8.6 |
-| Ada Lovelace | RTX 4060-4090 | 8.9 |
-| Hopper | H100, H200 | 9.0 |
-| Blackwell | RTX 5070-5090, B100, B200 | 10.0 |
-
-Check your GPU's compute capability: [NVIDIA CUDA GPUs](https://developer.nvidia.com/cuda-gpus)
-
-## Quick start
-
-1. **Fork** this repository (click "Fork" button above)
-
-2. **Clone** your fork:
-   ```bash
-   git clone https://github.com/<your-username>/datascience-devcontainer.git
-   ```
-
-3. **Open VS Code**
-
-4. **Open Folder in Container** from the VS Code command palette (`Ctrl+Shift+P`), start typing `Open Folder in`...
-
-   > VS Code will prompt you to choose a devcontainer configuration. Select the one that matches your hardware.
-
-5. **Verify** by running `notebooks/environment_test.ipynb`
-
-## Using as a template for new projects
-
-### One-time setup: Make your fork a template
-
-1. Go to your fork on GitHub
-2. Click **Settings** → scroll to **Template repository**
-3. Check the box to enable it
-
-### Creating a new project from your template
-
-1. Go to your fork on GitHub
-2. Click the green **Use this template** button → **Create a new repository**
-3. Enter your new repository name and settings, click **Create repository**
-4. **Clone** your new repository:
-   ```bash
-   git clone https://github.com/<your-username>/my-new-project.git
-   ```
-
-Now you have a fresh data science project with the dev container configuration ready to go!
-
-## Adding Python packages
-
-### Using pip directly
-
-Install packages in the container terminal:
-
-```bash
-pip install <package-name>
-```
-
-> **Note:** Packages installed this way will be lost when the container is rebuilt.
-
-### Using requirements.txt (recommended)
-
-1. **Create** a `requirements.txt` file in the repository root:
-   ```
-   lightgbm
-   shap
-   ```
-
-2. **Update** the appropriate `devcontainer.json` to install packages on container creation:
-   ```json
-   "postCreateCommand": "pip install -r requirements.txt"
-   ```
-
-3. **Rebuild** the container (`F1` → "Dev Containers: Rebuild Container")
-
-## Keeping your fork updated
-
-```bash
-# Add upstream (once)
-git remote add upstream https://github.com/gperdrizet/datascience-devcontainer.git
-
-# Sync
-git fetch upstream
-git merge upstream/main
-```
-
 ## Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| Docker won't start | Enable virtualization in BIOS |
-| Permission denied (Linux) | Add user to docker group, then log out/in |
-| GPU not detected | Update NVIDIA drivers (≥570), install NVIDIA Container Toolkit |
-| Container build fails | Check internet connection |
-| Module not found | Rebuild container after adding to requirements.txt |
+| Docker won't start | Enable virtualization in BIOS / enable WSL2 on Windows |
+| Permission denied (Linux) | Add your user to the docker group, then log out and back in |
+| GPU not detected | Update NVIDIA drivers (≥570); Linux: install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) |
+| Container build fails | Check your internet connection |
+| Module not found | Add the package to `requirements.txt` and rebuild the container |
