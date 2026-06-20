@@ -20,7 +20,7 @@ A ready-to-use data science environment for VS Code, designed for data science a
 
 **NVIDIA GPU users** (also required)
 - NVIDIA driver ≥570 ([download](https://www.nvidia.com/Download/index.aspx))
-- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) *(Linux only — not needed on Windows)*
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) *(Linux only, not needed on Windows)*
 
 > **Mac users:** GPU acceleration (Metal/MPS) does not pass through to Docker containers. The Mac configuration uses native ARM64 CPU, no extra setup needed beyond Docker Desktop.
 
