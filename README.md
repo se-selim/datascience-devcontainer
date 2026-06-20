@@ -67,6 +67,15 @@ Fork this repo once, then use it as a GitHub template to spin up new projects in
    git clone https://github.com/<your-username>/my-new-project.git
    ```
 
+4. **Clean it up** — remove anything that doesn't belong to your project:
+   - Update `README.md` to describe your project
+   - Delete unused devcontainer configs (e.g. if you only use CPU, remove `nvidia/` and `mac/`)
+   - Remove or replace `notebooks/environment_test.ipynb` with your own notebooks
+   - Delete test data from `data/`
+   ```bash
+   git add -A && git commit -m "Initial project setup" && git push
+   ```
+
 ## Adding Python packages
 
 ### Temporary (lost on rebuild)
