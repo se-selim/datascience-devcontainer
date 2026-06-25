@@ -8,6 +8,8 @@ jobs:
   tag-release:
     name: Create matching tag and release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
@@ -31,8 +33,7 @@ jobs:
           VERSION: ${{ github.event.client_payload.version }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_BODY=$(cat /tmp/version_tables.md)
-          gh release create "v${VERSION}" --title "v${VERSION}" --notes "$RELEASE_BODY"
+          gh release create "v${VERSION}" --title "v${VERSION}" --generate-notes
           echo "Created release v${VERSION}"
 
 
